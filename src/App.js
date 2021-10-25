@@ -3,6 +3,7 @@ import { ethers } from 'ethers';
 
 import myEpicGame from './utils/MyEpicGame.json';
 import SelectCharacter from './Components/SelectCharacter'
+import Arena from './Components/Arena'
 
 import twitterLogo from './assets/twitter-logo.svg';
 import './App.css';
@@ -55,6 +56,8 @@ const App = () => {
       </div>)
     } else if (currentAccount && !characterNFT) {
       return <SelectCharacter setCharacterNFT={setCharacterNFT} />;
+    } else if (currentAccount && characterNFT ){
+      return <Arena characterNFT={characterNFT} />
     }
   };
 
