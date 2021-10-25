@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
+import SelectCharacter from './Components/SelectCharacter'
+
 import twitterLogo from './assets/twitter-logo.svg';
 import './App.css';
 
@@ -9,6 +11,7 @@ const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
 
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState(null)
+  const [characterNFT, setCharacterNFT] = useState(null);
 
   const checkIfWalletIsConnected = async () => {
     try {
@@ -34,6 +37,23 @@ const App = () => {
       console.log(error)
     }
   }
+
+  const renderContent = () => {
+    if(!currentAccount){
+      return (<div className="connect-wallet-container">
+              <img
+                src="https://c.tenor.com/y2JXkY1pXkwAAAAC/cat-computer.gif"
+                alt="Cat Coding"
+                width='350'
+                className="connect-wallet-gif"
+              />
+              <button className="cta-button connect-wallet-button"
+                onClick={connectWalletAction}>Connect Wallet To Get Started</button>
+            </div>)
+    } else if(currentAccount && !characterNFT){
+      return <SelectCharacter setCharacterNFT={setCharacterNFT} />;
+    }
+  };
 
   const connectWalletAction = async()=>{
     try{
@@ -65,16 +85,7 @@ const App = () => {
         <div className="header-container">
           <p className="header gradient-text">🚀 Road to Trillion 🚀</p>
           <p className="sub-text">Team up to build the future!</p>
-          <div className="connect-wallet-container">
-            <img
-              src="https://c.tenor.com/y2JXkY1pXkwAAAAC/cat-computer.gif"
-              alt="Cat Coding"
-              width='350'
-              className="connect-wallet-gif"
-            />
-            <button className="cta-button connect-wallet-button"
-              onClick={connectWalletAction}>Connect Wallet To Get Started</button>
-          </div>
+          {renderContent()}
         </div>
         <div className="footer-container">
           <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
