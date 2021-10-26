@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
+
 import { CONTRACT_ADDRESS, transformCharacterData } from '../../constants';
 import myEpicGame from '../../utils/MyEpicGame.json';
+import LoadingIndicator from '../LoadingIndicator'
+
 import './Arena.css';
 
 const Arena = ({ characterNFT, setCharacterNFT }) => {
   const [gameContract, setGameContract] = useState(null);
   const [boss, setBoss] = useState(null);
   const [attackState, setAttackState] = useState('');
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     const { ethereum } = window;
@@ -70,15 +74,27 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
         await attackTxn.wait();
         console.log('attackTxn:', attackTxn);
         setAttackState('hit');
+
+        setShowToast(true);
+        setTimeout(() => {
+          setShowToast(false);
+        }, 5000);
       }
     }catch(error){
       console.error('Error attacking the boss:', error)
       setAttackState('');
+      setShowToast(false);
     }
   };
 
   return (
     <div className="arena-container">
+      {boss && (
+        <div id="toast" className={showToast && ("show")}>
+          <div id="desc">{`💥 ${boss.name} was hit for ${characterNFT.attackDamage}!`}</div>
+        </div>
+      )}
+
       {boss && (
         <div className="boss-container">
           <div className={`boss-content ${attackState}`}>
@@ -93,9 +109,15 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
           </div>
           <div className="attack-container">
             <button className="cta-button" onClick={runAttackAction}>
-              {`💥 Attack ${boss.name}`}
+              {`💥 Buy a Macbook Pro M1 Max from ${boss.name}`}
             </button>
           </div>
+          {attackState === 'attacking' && (
+            <div className="loading-indicator">
+              <LoadingIndicator />
+              <p>Attacking ⚔️</p>
+            </div>
+          )}
         </div>
       )}
 

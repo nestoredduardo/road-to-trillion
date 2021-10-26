@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 
 import myEpicGame from './utils/MyEpicGame.json';
-import SelectCharacter from './Components/SelectCharacter'
-import Arena from './Components/Arena'
+import SelectCharacter from './Components/SelectCharacter';
+import Arena from './Components/Arena';
+import LoadingIndicator from './Components/LoadingIndicator';
 
 import twitterLogo from './assets/twitter-logo.svg';
 import './App.css';
@@ -16,6 +17,7 @@ const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState(null)
   const [characterNFT, setCharacterNFT] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const checkIfWalletIsConnected = async () => {
     try {
@@ -82,7 +84,8 @@ const App = () => {
   }
 
   useEffect(() => {
-    checkIfWalletIsConnected()
+    setIsLoading(true);
+    checkIfWalletIsConnected();
   }, [])
 
   useEffect(() => {
@@ -97,13 +100,13 @@ const App = () => {
         signer
       );
 
-      const txn = await gameContract.checkIfUserHasNFT();
-      if (txn.name) {
+      const characterNFT = await gameContract.checkIfUserHasNFT();
+      if (characterNFT.name) {
         console.log('User has character NFT');
-        setCharacterNFT(transformCharacterData(txn));
-      } else {
-        console.log('No character NFT found');
-      }
+        setCharacterNFT(transformCharacterData(characterNFT));
+      } 
+
+      setIsLoading(false);
     };
 
     if(currentAccount) {
@@ -116,7 +119,7 @@ const App = () => {
     <div className="App">
       <div className="container">
         <div className="header-container">
-          <p className="header gradient-text">🚀 Road to Trillion 🚀</p>
+          <p className="header gradient-text">Road to Trillion 🚀</p>
           <p className="sub-text">Team up to build the future!</p>
           {renderContent()}
         </div>
