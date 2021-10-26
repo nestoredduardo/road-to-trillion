@@ -45,6 +45,10 @@ const App = () => {
   }
 
   const renderContent = () => {
+    if(isLoading){
+      return <LoadingIndicator />
+    }
+
     if (!currentAccount) {
       return (<div className="connect-wallet-container">
         <img
@@ -86,6 +90,7 @@ const App = () => {
   useEffect(() => {
     setIsLoading(true);
     checkIfWalletIsConnected();
+    setIsLoading(false);
   }, [])
 
   useEffect(() => {
