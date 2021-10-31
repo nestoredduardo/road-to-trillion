@@ -10,12 +10,12 @@ import twitterLogo from './assets/twitter-logo.svg';
 import './App.css';
 
 // ConstantS
-import { CONTRACT_ADDRESS, transformCharacterData } from './constants'
+import { CONTRACT_ADDRESS, transformCharacterData } from './constants';
 const TWITTER_HANDLE = 'nestoredduardo';
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
 
 const App = () => {
-  const [currentAccount, setCurrentAccount] = useState(null)
+  const [currentAccount, setCurrentAccount] = useState(null);
   const [characterNFT, setCharacterNFT] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -40,30 +40,38 @@ const App = () => {
         }
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const renderContent = () => {
-    if(isLoading){
-      return <LoadingIndicator />
+    if (isLoading) {
+      return <LoadingIndicator />;
     }
 
     if (!currentAccount) {
-      return (<div className="connect-wallet-container">
-        <img
-          src="https://c.tenor.com/y2JXkY1pXkwAAAAC/cat-computer.gif"
-          alt="Cat Coding"
-          width='350'
-          className="connect-wallet-gif"
-        />
-        <button className="cta-button connect-wallet-button"
-          onClick={connectWalletAction}>Connect Wallet To Get Started</button>
-      </div>)
+      return (
+        <div className="connect-wallet-container">
+          <img
+            src="https://c.tenor.com/y2JXkY1pXkwAAAAC/cat-computer.gif"
+            alt="Cat Coding"
+            width="350"
+            className="connect-wallet-gif"
+          />
+          <button
+            className="cta-button connect-wallet-button"
+            onClick={connectWalletAction}
+          >
+            Connect Wallet To Get Started
+          </button>
+        </div>
+      );
     } else if (currentAccount && !characterNFT) {
       return <SelectCharacter setCharacterNFT={setCharacterNFT} />;
-    } else if (currentAccount && characterNFT ){
-      return <Arena characterNFT={characterNFT} setCharacterNFT={setCharacterNFT} />
+    } else if (currentAccount && characterNFT) {
+      return (
+        <Arena characterNFT={characterNFT} setCharacterNFT={setCharacterNFT} />
+      );
     }
   };
 
@@ -72,7 +80,7 @@ const App = () => {
       const { ethereum } = window;
 
       if (!ethereum) {
-        alert('Get Metamask to start your road in web 3.0 🚀')
+        alert('Get Metamask to start your road in web 3.0 🚀');
         return;
       }
 
@@ -81,21 +89,21 @@ const App = () => {
       });
 
       console.log('You are connected', accounts[0]);
-      setCurrentAccount(accounts[0])
+      setCurrentAccount(accounts[0]);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
     setIsLoading(true);
     checkIfWalletIsConnected();
     setIsLoading(false);
-  }, [])
+  }, []);
 
   useEffect(() => {
     const fetchNFTMetadata = async () => {
-      console.log('Checking for Character NFT on address:', currentAccount)
+      console.log('Checking for Character NFT on address:', currentAccount);
 
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
@@ -109,16 +117,16 @@ const App = () => {
       if (characterNFT.name) {
         console.log('User has character NFT');
         setCharacterNFT(transformCharacterData(characterNFT));
-      } 
+      }
 
       setIsLoading(false);
     };
 
-    if(currentAccount) {
+    if (currentAccount) {
       console.log('CurrentAccount:', currentAccount);
-      fetchNFTMetadata()
+      fetchNFTMetadata();
     }
-  }, [currentAccount])
+  }, [currentAccount]);
 
   return (
     <div className="App">

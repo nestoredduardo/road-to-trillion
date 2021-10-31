@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 
 import { CONTRACT_ADDRESS, transformCharacterData } from '../../constants';
 import myEpicGame from '../../utils/MyEpicGame.json';
-import LoadingIndicator from '../LoadingIndicator'
+import LoadingIndicator from '../LoadingIndicator';
 
 import './Arena.css';
 
@@ -31,43 +31,43 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
     }
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     const fetchBoss = async () => {
       const bossTxn = await gameContract.getBigBoss();
       console.log('Boss: ', bossTxn);
       setBoss(transformCharacterData(bossTxn));
-    }
+    };
 
-    const onAttackComplete = (newBossHp, newPlayerHp) =>{
+    const onAttackComplete = (newBossHp, newPlayerHp) => {
       const bossHp = newBossHp.toNumber();
       const playerHp = newPlayerHp.toNumber();
 
-      console.log(`AttackComplete: Boss Hp: ${bossHp} Player Hp: ${playerHp}`)
+      console.log(`AttackComplete: Boss Hp: ${bossHp} Player Hp: ${playerHp}`);
 
       setBoss((prevState) => {
-        return { ...prevState, hp:bossHp}
-      })
+        return { ...prevState, hp: bossHp };
+      });
 
-      setCharacterNFT((prevState)=>{
-        return { ...prevState, hp: playerHp}
-      })
-    }
+      setCharacterNFT((prevState) => {
+        return { ...prevState, hp: playerHp };
+      });
+    };
 
-    if(gameContract){
+    if (gameContract) {
       fetchBoss();
       gameContract.on('AttackComplete', onAttackComplete);
     }
 
     return () => {
       if (gameContract) {
-          gameContract.off('AttackComplete', onAttackComplete);
+        gameContract.off('AttackComplete', onAttackComplete);
       }
-    }
-  }, [gameContract])
+    };
+  }, [gameContract]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const runAttackAction = async () => {
-    try{
-      if(gameContract){
+    try {
+      if (gameContract) {
         setAttackState('attacking');
         console.log('Attacking Boss...');
         const attackTxn = await gameContract.attackBoss();
@@ -80,8 +80,8 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
           setShowToast(false);
         }, 5000);
       }
-    }catch(error){
-      console.error('Error attacking the boss:', error)
+    } catch (error) {
+      console.error('Error attacking the boss:', error);
       setAttackState('');
       setShowToast(false);
     }
@@ -90,7 +90,7 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
   return (
     <div className="arena-container">
       {boss && (
-        <div id="toast" className={showToast && ("show")}>
+        <div id="toast" className={showToast && 'show'}>
           <div id="desc">{`💥 ${boss.name} was hit for ${characterNFT.attackDamage}!`}</div>
         </div>
       )}

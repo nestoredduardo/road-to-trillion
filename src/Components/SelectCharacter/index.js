@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ethers } from 'ethers'
+import { ethers } from 'ethers';
 
 import { CONTRACT_ADDRESS, transformCharacterData } from '../../constants';
 import myEpicGame from '../../utils/MyEpicGame.json';
@@ -26,7 +26,7 @@ const SelectCharacter = ({ setCharacterNFT }) => {
       }
     } catch (error) {
       console.warn('MintCharacterAction Error:', error);
-      
+
       setMintingCharacter(false);
     }
   };
@@ -47,7 +47,7 @@ const SelectCharacter = ({ setCharacterNFT }) => {
     } else {
       console.log('Ethereum object not found');
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     const getCharacters = async () => {
@@ -58,16 +58,16 @@ const SelectCharacter = ({ setCharacterNFT }) => {
         console.log('charactersTxn:', charactersTxn);
 
         const characters = charactersTxn.map((characterData) => {
-          return transformCharacterData(characterData)
+          return transformCharacterData(characterData);
         });
 
         console.log('characters:', characters);
 
-        setCharacters(characters)
+        setCharacters(characters);
       } catch (error) {
-        console.error('Something went wrong fetching characters: ', error)
+        console.error('Something went wrong fetching characters: ', error);
       }
-    }
+    };
 
     const onCharacterMint = async (sender, tokenId, characterIndex) => {
       console.log(
@@ -88,9 +88,9 @@ const SelectCharacter = ({ setCharacterNFT }) => {
     return () => {
       if (gameContract) {
         gameContract.off('CharacterNFTMinted', onCharacterMint);
-      };
+      }
     };
-  }, [gameContract])
+  }, [gameContract]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const renderCharacters = () =>
     characters.map((character, index) => (
@@ -107,25 +107,27 @@ const SelectCharacter = ({ setCharacterNFT }) => {
       </div>
     ));
 
-  return <div className='select-character-container'>
-    <h1>Mint your hero. Choose wisely.</h1>
-    {characters.length > 0 && (
-      <div className="character-grid">{renderCharacters()}</div>
-    )}
+  return (
+    <div className="select-character-container">
+      <h1>Mint your hero. Choose wisely.</h1>
+      {characters.length > 0 && (
+        <div className="character-grid">{renderCharacters()}</div>
+      )}
 
-    {mintingCharacter && (
-      <div className="loading">
-        <div className="indicator">
-          <LoadingIndicator />
-          <p>Minting In Progress...</p>
+      {mintingCharacter && (
+        <div className="loading">
+          <div className="indicator">
+            <LoadingIndicator />
+            <p>Minting In Progress...</p>
+          </div>
+          <img
+            src="https://c.tenor.com/lSGk2Lhclj4AAAAC/getting-ready-cat.gif"
+            alt="Minting loading indicator"
+          />
         </div>
-        <img
-          src="https://c.tenor.com/lSGk2Lhclj4AAAAC/getting-ready-cat.gif"
-          alt="Minting loading indicator"
-        />
-      </div>
-    )}
-  </div>
-}
+      )}
+    </div>
+  );
+};
 
-export default SelectCharacter
+export default SelectCharacter;
